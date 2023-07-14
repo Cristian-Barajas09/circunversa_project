@@ -84,12 +84,50 @@ class Modelo:
         result = cur.rowcount
         con.close()
         return result
-    
+
 
     def eliminar_usuario(self,cedula):
         con = self.__conexion()
         cur = con.cursor()
         cur.execute(f"DELETE FROM empleados WHERE cedula = {cedula}")
+        con.commit()
+        result = cur.rowcount
+        con.close()
+        return result
+
+
+    def obtener_salario(self,cedula):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"SELECT * FROM nominas WHERE cedula = {cedula}")
+        result = cur.fetchall()
+        con.close()
+        return result
+
+    def guardar_salario(self,cedula,salario):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"INSERT INTO nominas (cedula,salario) VALUES ({cedula},{salario})")
+        con.commit()
+        result = cur.rowcount
+        con.close()
+        return result
+
+
+    def actualizar_salario(self,cedula,salario):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"UPDATE nominas SET cedula={cedula},salario={salario} WHERE cedula = {cedula}")
+        con.commit()
+        result = cur.rowcount
+        con.close()
+        return result
+
+
+    def eliminar_salario(self,cedula):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"DELETE FROM nominas WHERE cedula={cedula}")
         con.commit()
         result = cur.rowcount
         con.close()

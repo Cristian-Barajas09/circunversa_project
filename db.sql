@@ -25,6 +25,9 @@ CREATE TABLE nominas (
 );
 
 
+
+
+
 CREATE TABLE cargos(
 	id_tipo INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     nombre VARCHAR(20) NOT NULL
