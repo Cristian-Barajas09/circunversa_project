@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-class Vista(tk.Frame):
+class Vista(tk.Tk):
     def __init__(self,master):
         super().__init__(master)
 
