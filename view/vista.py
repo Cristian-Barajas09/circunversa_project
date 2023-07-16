@@ -10,6 +10,8 @@ class Vista:
         self.root.title("Circunversa")
         self.root.configure(bg="#222")
 
+        self.control = Controlador()
+
         s = ttk.Style(self.root)
         s.configure('TNotebook',background='#222')
         s.configure('Treeview',background='#222')
@@ -43,8 +45,8 @@ class Vista:
         self.tree = ttk.Treeview(frame4,columns=columns,show="headings")
         self.tree.heading('cedula',text="Cedula")
 
-        # for item in self.get_users():
-        #     self.tree.insert()
+        for item in self.get_users():
+            self.tree.insert('',tk.END,item[0])
 
         self.tree.pack()
 
@@ -58,4 +60,4 @@ class Vista:
 
 
     def get_users(self):
-        return 
+        return self.control.obtener_usuarios()

@@ -5,7 +5,6 @@ from controller.controlador import Controlador
 from styles.styles import btn,label
 from .vista import Vista
 class Form:
-    permisos = True
     def __init__(self,):
         self.ventana = tk.Tk()
         self.ventana.title("Registro")
@@ -45,10 +44,22 @@ class Form:
 
         labelConfirm = ttk.Label(self.ventana,text="Confirmar contraseña")
         labelConfirm.pack()
-        confcontrasena1 = ttk.Entry(self.ventana,show="*")
-        confcontrasena1.pack(pady=5)
+        self.confcontrasena1 = ttk.Entry(self.ventana,show="*")
+        self.confcontrasena1.pack(pady=5)
 
-        boton1 = ttk.Button(self.ventana, text = "Registrar",style="C.TButton",command=self.registrar)
+        labelCargo = ttk.Label(self.ventana,text="Cargo a ejercer")
+        labelCargo.pack()
+
+        result = self.get_cargos()
+        values = []
+        id_cargo = []
+        for item in result:
+            id_cargo.append(item[0])
+            values.append(item[1])
+        cargo = ttk.Combobox(self.ventana,values=values)
+        cargo.pack()
+
+        boton1 = ttk.Button(self.ventana, text = "Registrar",style="C.TButton",command=lambda: self.registrar(nombreTexto.get(),apellidoTexto.get(),cedulaTexto.get(),self.contrasena1.get(),self.confcontrasena1.get(),cargo.get(),id_cargo))
 
         boton1.pack(pady=10)
 
@@ -62,8 +73,11 @@ class Form:
             self.contrasena1.configure(show="*")
 
 
-    def registrar(self):
-        # return self.ctrl.crear_usuario(cedula,nombre,apellido,contrasenna,confirm)
+    def registrar(self,cedula,nombre,apellido,contrasenna,confirm,cargo,id_cargo):
+        result = self.ctrl.crear_usuario(cedula,nombre,apellido,contrasenna,confirm,cargo,id_cargo)
 
         self.ventana.destroy()
         Vista()
+
+    def get_cargos(self):
+        return self.ctrl.get_cargos()

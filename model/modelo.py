@@ -8,14 +8,14 @@ class Modelo:
             database,
             password=""
             ):
-        self.__usuario = usuario
+        self.__user = usuario
         self.__host = host
         self.__password = password
         self.__database = database
 
     def __conexion(self):
         database = mysql.connector.connect(
-            usuario = self.__usuario,
+            user = self.__user,
             host = self.__host,
             password = self.__password,
             database = self.__database

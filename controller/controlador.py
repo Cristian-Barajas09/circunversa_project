@@ -1,22 +1,28 @@
 from model.modelo import Modelo
 from datetime import datetime
-
+from util.passwords import encryptPassword
 
 
 class Controlador:
     def __init__(self):
         self.modelo = Modelo("root","localhost","circunversa","cb300804")
 
-    def crear_usuario(self,cedula,nombre,apellido,contrasenna,cargo):
+    def crear_usuario(self,cedula,nombre,apellido,contrasenna,confirm,cargo,id_cargo):
         if (
             cedula == "" or
             nombre == "" or
             apellido == "" or
             contrasenna == "" or
-            cargo == ""
+            cargo == "" or
+            confirm == ""
             ):
             return "rellene todos los campos"
         else:
+            if contrasenna != confirm:
+                return "las contraseñas no son iguales"
+
+            contrasenna = encryptPassword(contrasenna)
+
             return self.modelo.crear_usuario(cedula,nombre,apellido,contrasenna,cargo)
 
     def obtener_usuario(self,cedula):
