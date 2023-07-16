@@ -65,13 +65,14 @@ class Controlador:
 
     def eliminar_salario(self,cedula):
         return self.modelo.eliminar_salario(cedula)
-    
+
+
     def get_cargos(self):
         return self.modelo.get_cargo()
 
     def set_porcentajes(self,value,id_cargo):
         return self.modelo.set_porcentajes(value,id_cargo)
-    
+
     def get_porcentajes(self):
         return self.modelo.get_porcentajes()
 

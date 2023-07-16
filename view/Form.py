@@ -12,26 +12,4 @@ class Form(tk.Frame):
         self.ventana.configure(bg="#333")
         self.ctrl = Controlador()
 
-
-        style= Style(self.ventana)
-
-        s_entry = {
-            'fieldbackground':"#9C0B0B",
-            'foreground':'#fff',
-        }
-
-        style.theme_use("clam")
-        style.configure('TEntry',**s_entry)
-
-
-        label1 = ttk.Label(self.ventana,text="Cedula")
-        label1.pack()
-
-        self.cedula = ttk.Entry(self.ventana,)
-        self.cedula.pack()
-
-        label2 = ttk.Label(self.ventana,text="contraseña")
-        label2.pack()
-
-        self.password = ttk.Entry(self.ventana,show="*")
-        self.password.pack()
+        

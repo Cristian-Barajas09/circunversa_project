@@ -150,7 +150,8 @@ class Modelo:
         result = cur.rowcount
         con.close()
         return result
-    
+
+
     def get_porcentajes(self):
         con = self.__conexion()
         cur = con.cursor()
@@ -159,7 +160,7 @@ class Modelo:
         result = cur.fetchall()
         con.close()
         return result
-    
+
 
     def busqueda(self,search,param):
         con = self.__conexion()
