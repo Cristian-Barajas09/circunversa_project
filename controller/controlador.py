@@ -1,4 +1,4 @@
-from modelo import Modelo
+from model.modelo import Modelo
 class Controlador:
     def __init__(self):
         self.modelo = Modelo("root","localhost","circunversa","cb300804")

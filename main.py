@@ -1,4 +1,4 @@
-from Form import Form
+from view.Form import Form
 import tkinter as tk
 
 if __name__ == '__main__':
