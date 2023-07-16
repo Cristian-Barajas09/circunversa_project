@@ -24,6 +24,12 @@ CREATE TABLE nominas (
     CONSTRAINT fk_empleado FOREIGN KEY (cedula) REFERENCES empleados(cedula)
 );
 
+CREATE TABLE porcentajes(
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    porcentaje INT NOT NULL DEFAULT 40,
+    id_cargo INT NOT NULL,
+    CONSTRAINT fk_cargo_salario FOREIGN KEY (id_cargo) REFERENCES cargos(id_tipo)
+);
 
 
 
@@ -34,3 +40,4 @@ CREATE TABLE cargos(
 );
 
 INSERT INTO cargos (nombre) VALUES ("admin"),("administracion"),("empleado")
+

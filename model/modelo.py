@@ -8,14 +8,14 @@ class Modelo:
             database,
             password=""
             ):
-        self.__usuario = usuario
+        self.__user = usuario
         self.__host = host
         self.__password = password
         self.__database = database
 
     def __conexion(self):
         database = mysql.connector.connect(
-            usuario = self.__usuario,
+            user = self.__user,
             host = self.__host,
             password = self.__password,
             database = self.__database
@@ -130,5 +130,42 @@ class Modelo:
         cur.execute(f"DELETE FROM nominas WHERE cedula={cedula}")
         con.commit()
         result = cur.rowcount
+        con.close()
+        return result
+
+
+    def get_cargo(self):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute("SELECT * FROM cargos")
+        result = cur.fetchall()
+        con.close()
+        return result
+
+    def set_porcentaje(self,porcentaje,id_cargo):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"INSERT INTO porcentajes (porcentaje,id_cargo) VALUES ({porcentaje},{id_cargo})")
+        con.commit()
+        result = cur.rowcount
+        con.close()
+        return result
+
+
+    def get_porcentajes(self):
+        con = self.__conexion()
+        cur = con.cursor()
+
+        cur.execute("SELECT * FROM porcentajes")
+        result = cur.fetchall()
+        con.close()
+        return result
+
+
+    def busqueda(self,search,param):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"SELECT * FROM empleados WHERE {param} LIKE '{search}%'")
+        result = cur.fetchall()
         con.close()
         return result
