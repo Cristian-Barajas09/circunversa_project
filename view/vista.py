@@ -23,6 +23,7 @@ class Vista:
 
         self.trabajadores()
         self.vehiculos()
+        self.salarios()
         self.notebook.place(x=0,y=0,relwidth=1,relheight=1)
 
         self.root.mainloop()
@@ -71,7 +72,10 @@ class Vista:
 
 
 
-
+    def salarios(self):
+        self.fsalarios = tk.Frame(self.notebook,bg="#222")
+        self.fsalarios.pack()
+        self.notebook.add(self.fsalarios,text="salarios")
 
 
     def vehiculos(self):
