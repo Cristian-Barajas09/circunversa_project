@@ -8,7 +8,7 @@ class Form:
     def __init__(self,):
         self.ventana = tk.Tk()
         self.ventana.title("Registro")
-        self.ventana.geometry("400x350")
+        self.ventana.geometry("400x400")
         self.ventana.configure(bg="#222")
         self.ctrl = Controlador()
 
