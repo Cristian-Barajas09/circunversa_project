@@ -178,3 +178,41 @@ class Modelo:
         result = cur.fetchone()
         con.close()
         return result
+    
+    def set_sesion(self,cedula):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"INSERT INTO session (cedula,status) VALUES ({cedula},TRUE)")
+        con.commit()
+        con.close()
+
+    def get_sesion(self):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"SELECT * FROM session")
+        result = cur.fetchone()
+        con.close()
+        return result
+    
+    def remove_sesion(self,cedula):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"DELETE FROM session WHERE cedula = {cedula}")
+        con.commit()
+        con.close()
+
+    def get_bucetas(self):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"SELECT * FROM bucetas")
+        result = cur.fetchone()
+        con.close()
+        return result
+    
+    def get_horario(self,numero):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"SELECT * FROM control_bucetas WHERE numero = {numero}")
+        result = cur.fetchone()
+        con.close()
+        return result

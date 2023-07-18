@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-import time
 from controller.controlador import Controlador
 from styles.styles import btn,label
 class Vista:
@@ -10,40 +9,105 @@ class Vista:
         self.root = tk.Tk()
         self.root.geometry("600x500")
         self.root.title("Circunversa")
-        self.root.configure(bg="#222")
+        self.root.configure(bg="#fff")
         self.session = usuario
 
         self.ctrl = Controlador()
 
         s = ttk.Style(self.root)
-        s.configure('TNotebook',background='#222')
+        s.configure('TNotebook',background='#fff')
 
 
         self.notebook =  ttk.Notebook(self.root)
+        self.notebook
 
         self.trabajadores()
         self.vehiculos()
-        self.salarios()
+        if self.session[3] == 1:
+            self.salarios()
+        
+
+        self.btn = ttk.Button(self.root,text="Cerrar sesion",command=self.cerrar_sesion)
+        self.btn.place(relx=0.8,rely=0.0009,relheight=0.05)
+        self.notebook
         self.notebook.place(x=0,y=0,relwidth=1,relheight=1)
 
         self.root.mainloop()
 
+    # Metodos  ------------------------
+    def cerrar_sesion(self):
+        self.root.destroy()
+        self.ctrl.remove_sesion(self.session[0])
+    def get_users(self):
+        return self.ctrl.obtener_usuarios()
+
+    def show_password(self):
+        if self.contrasena1.cget("show") == "*":
+            self.contrasena1.configure(show="")
+        else:
+            self.contrasena1.configure(show="*")
+
+    def registrar(self,cedula,nombre,apellido,contrasenna,confirm,cargo,id_cargo):
+        result = self.ctrl.crear_usuario(cedula,nombre,apellido,contrasenna,confirm,cargo,id_cargo)
+        if not(isinstance(result,int)):
+            messagebox.showerror("error",result)
+        else:
+            if result > 0:
+                messagebox.showinfo("status","guardado exitosamente")
+                self.trabajadores()
+                self.w1.destroy()
+            else: messagebox.showerror("Error",f"no se pudo guardar a {nombre}")
+
+    def get_cargos(self):
+        return self.ctrl.get_cargos()
+
+    def buscar(self,search,param):
+        if search == "":
+            return self.root.bell()
+        self.carga = tk.Toplevel()
+        self.carga.wm_geometry("200x30")
+        carga = ttk.Progressbar(self.carga)
+
+        carga.pack()
+        carga.start(30)
+
+        result = self.ctrl.busqueda(search,param)
+
+        if not(isinstance(result,list)):
+            messagebox.showerror("Error",result)
+        else:
+            if len(result) > 0:
+                self.carga.destroy()
+                self.tree.delete(*self.tree.get_children())
+                for item in result:
+                    self.tree.insert('',tk.END,values=(item[0],item[1],item[2]))
+                self.frame1.update()
+
+    def validate_search(self,event):
+        result = self.get_users()
+        if self.search.get() == "":
+            self.tree.delete(*self.tree.get_children())
+            for item in result:
+                self.tree.insert('',tk.END,values=(item[0],item[1],item[2]))
+            self.frame1.update()
+    
+    def get_bucetas(self):
+        return self.ctrl.get_bucetas()
+    # End metodos ---------------------------------
+    # views ---------------------------------------
     def trabajadores(self):
-        self.frame1 = tk.Frame(self.notebook,bg="#222")
+        self.frame1 = tk.Frame(self.notebook,bg="#fff")
         self.frame1.pack()
         self.notebook.add(self.frame1,text="Trabajadores")
-
-        s = ttk.Style(self.frame1)
-        s.configure('Treeview',background='#F52020')
-        s.configure('TFrame',background="#222")
 
 
 
         frame_search = ttk.Frame(self.frame1)
         frame_search.place(relx=0,rely=0,relwidth=1,relheight=0.3)
-
-        self.search = ttk.Entry(frame_search,justify="right")
+        self.search = ttk.Entry(frame_search,justify="right",)
         self.search.place(relx=0.26,rely=0.2,width=180,height=25)
+        self.search.bind("<FocusOut>",self.validate_search)
+
 
         self.select = ttk.Combobox(frame_search,values=("cedula","nombre","apellido"),state="readonly")
         self.select.current(0)
@@ -55,14 +119,12 @@ class Vista:
 
         columns = ("cedula","nombre","apellido")
         self.tree = ttk.Treeview(self.frame1,columns=columns,show="headings")
-        for item in range(len(columns)):
-            self.tree.column("#"+str(item),width=100,stretch=False)
+
         self.tree.heading('cedula',text="Cedula")
         self.tree.heading('nombre',text="Nombre")
         self.tree.heading('apellido',text="Apellido")
 
         for item in self.get_users():
-            print(item)
             self.tree.insert('',tk.END,values=(item[0],item[1],item[2]))
 
         self.tree.place(relx=0,rely=0.3,relwidth=1,relheight=0.65)
@@ -75,38 +137,87 @@ class Vista:
 
 
     def salarios(self):
-        self.fsalarios = tk.Frame(self.notebook,bg="#222")
+        self.fsalarios = tk.Frame(self.notebook,bg="#fff")
         self.fsalarios.pack()
         self.notebook.add(self.fsalarios,text="salarios")
 
+        texto1= ttk.Entry(self.fsalarios)
+        texto1.insert(0,'cargo')
+        texto1.pack()
+
+        labelCargo = ttk.Label(self.fsalarios,text="Cargo a ejercer")
+        labelCargo.pack()
+
+        result = self.get_cargos()
+        values = []
+        id_cargo = []
+        for item in result:
+            id_cargo.append(item[0])
+            values.append(f"{item[0]}-{item[1]}")
+        cargo = ttk.Combobox(self.fsalarios,values=values,state="readonly")
+        cargo.pack()
+
+        texto2= ttk.Entry(self.fsalarios)
+        texto2.insert(0,'Pago')
+        texto2.pack()
+
+        labelCargo = ttk.Label(self.fsalarios,text="Cargo a ejercer")
+        labelCargo.pack()
+
+        result = self.get_cargos()
+        values = []
+        id_cargo = []
+        for item in result:
+            id_cargo.append(item[0])
+            values.append(f"{item[0]}-{item[1]}")
+        cargo = ttk.Combobox(self.fsalarios,values=values,state="readonly")
+        cargo.pack()
+
+        boton1= ttk.Entry(self.fsalarios)
+        boton1.insert(0,'PAGAR')
+        boton1.pack()
 
     def vehiculos(self):
-        self.frame2 = tk.Frame(self.notebook,bg="#222")
+        self.frame2 = tk.Frame(self.notebook,bg="#fff")
         self.frame2.pack()
         self.notebook.add(self.frame2,text="Busceta")
 
 
-    def get_users(self):
-        return self.ctrl.obtener_usuarios()
+
+        frame_search = ttk.Frame(self.frame2)
+        frame_search.place(relx=0,rely=0,relwidth=1,relheight=0.3)
+        self.search = ttk.Entry(frame_search,justify="right",)
+        self.search.place(relx=0.26,rely=0.2,width=180,height=25)
+        self.search.bind("<FocusOut>",self.validate_search)
 
 
-    def buscar(self,search,param):
-        self.carga = tk.Toplevel()
-        self.carga.wm_geometry("200x30")
-        carga = ttk.Progressbar(self.carga)
+        self.select = ttk.Combobox(frame_search,values=("numero","conductor"),state="readonly")
+        self.select.current(0)
+        self.select.place(relx=0.26,rely=0.21,width=50)
 
-        carga.pack()
-        carga.start(30)
-        result = self.control.busqueda(search,param)
+        btn_search = ttk.Button(frame_search,text="buscar",command=lambda: self.buscar(self.search.get(),self.select.get()))
+        btn_search.place(relx=0.57,rely=0.2,width=50,height=25)
 
-        if not(isinstance(result,list)):
-            messagebox.showerror("Error",result)
-        else:
-            if len(result) > 0:
-                carga.destroy()
-                self.trabajadores()
 
-        print(search,param)
+        columns = ("cedula","nombre","apellido")
+        self.tree = ttk.Treeview(self.frame2,columns=columns,show="headings")
+
+        self.tree.heading('cedula',text="Cedula")
+        self.tree.heading('nombre',text="Nombre")
+        self.tree.heading('apellido',text="Apellido")
+
+        for item in self.get_users():
+            self.tree.insert('',tk.END,values=(item[0],item[1],item[2]))
+
+        self.tree.place(relx=0,rely=0.3,relwidth=1,relheight=0.65)
+        btn = ttk.Button(self.frame2,text="Agregar empleado",command=self.crear_usuario)
+
+
+        if self.session[3] == 1:
+            btn.place(relx=0.4,rely=0.95)
+
+    
+
 
     def crear_usuario(self):
         self.w1 = tk.Toplevel()
@@ -166,18 +277,7 @@ class Vista:
 
         boton1.pack(pady=10)
 
-    def show_password(self):
-        if self.contrasena1.cget("show") == "*":
-            self.contrasena1.configure(show="")
-        else:
-            self.contrasena1.configure(show="*")
+    # end views ------------------------------------
 
 
-    def registrar(self,cedula,nombre,apellido,contrasenna,confirm,cargo,id_cargo):
-        result = self.ctrl.crear_usuario(cedula,nombre,apellido,contrasenna,confirm,cargo,id_cargo)
-
-        self.w1.destroy()
-        
-
-    def get_cargos(self):
-        return self.ctrl.get_cargos()
+    
