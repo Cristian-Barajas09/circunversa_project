@@ -92,4 +92,6 @@ class Controlador:
         return self.modelo.get_porcentajes()
 
     def busqueda(self,search,param):
+        if param == "cedula":
+            search = int(search)
         return self.modelo.busqueda(search,param)

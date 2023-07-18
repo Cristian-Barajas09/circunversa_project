@@ -34,7 +34,6 @@ class Vista:
         self.notebook.add(self.frame1,text="Trabajadores")
 
         s = ttk.Style(self.frame1)
-        s.configure('Treeview',background='#F52020')
         s.configure('TFrame',background="#222")
 
 
@@ -55,14 +54,12 @@ class Vista:
 
         columns = ("cedula","nombre","apellido")
         self.tree = ttk.Treeview(self.frame1,columns=columns,show="headings")
-        for item in range(len(columns)):
-            self.tree.column("#"+str(item),width=100,stretch=False)
+
         self.tree.heading('cedula',text="Cedula")
         self.tree.heading('nombre',text="Nombre")
         self.tree.heading('apellido',text="Apellido")
 
         for item in self.get_users():
-            print(item)
             self.tree.insert('',tk.END,values=(item[0],item[1],item[2]))
 
         self.tree.place(relx=0,rely=0.3,relwidth=1,relheight=0.65)
@@ -79,6 +76,41 @@ class Vista:
         self.fsalarios.pack()
         self.notebook.add(self.fsalarios,text="salarios")
 
+        texto1= ttk.Entry(self.fsalarios)
+        texto1.insert(0,'cargo')
+        texto1.pack()
+
+        labelCargo = ttk.Label(self.w1,text="Cargo a ejercer")
+        labelCargo.pack()
+
+        result = self.get_cargos()
+        values = []
+        id_cargo = []
+        for item in result:
+            id_cargo.append(item[0])
+            values.append(f"{item[0]}-{item[1]}")
+        cargo = ttk.Combobox(self.w1,values=values,state="readonly")
+        cargo.pack()
+
+        texto2= ttk.Entry(self.fsalarios)
+        texto2.insert(0,'Pago')
+        texto2.pack()
+
+        labelCargo = ttk.Label(self.w1,text="Cargo a ejercer")
+        labelCargo.pack()
+
+        result = self.get_cargos()
+        values = []
+        id_cargo = []
+        for item in result:
+            id_cargo.append(item[0])
+            values.append(f"{item[0]}-{item[1]}")
+        cargo = ttk.Combobox(self.w1,values=values,state="readonly")
+        cargo.pack()
+
+        boton1= ttk.Entry(self.fsalarios)
+        boton1.insert(0,'PAGAR')
+        boton1.pack()
 
     def vehiculos(self):
         self.frame2 = tk.Frame(self.notebook,bg="#222")
@@ -97,16 +129,18 @@ class Vista:
 
         carga.pack()
         carga.start(30)
-        result = self.control.busqueda(search,param)
+        print(search)
+        result = self.ctrl.busqueda(search,param)
 
         if not(isinstance(result,list)):
             messagebox.showerror("Error",result)
         else:
             if len(result) > 0:
-                carga.destroy()
-                self.trabajadores()
-
-        print(search,param)
+                self.carga.destroy()
+                self.tree.delete(*self.tree.get_children())
+                for item in result:
+                    self.tree.insert('',tk.END,values=(item[0],item[1],item[2]))
+                self.frame1.update()
 
     def crear_usuario(self):
         self.w1 = tk.Toplevel()
@@ -175,9 +209,14 @@ class Vista:
 
     def registrar(self,cedula,nombre,apellido,contrasenna,confirm,cargo,id_cargo):
         result = self.ctrl.crear_usuario(cedula,nombre,apellido,contrasenna,confirm,cargo,id_cargo)
-
-        self.w1.destroy()
-        
+        if not(isinstance(result,int)):
+            messagebox.showerror("error",result)
+        else:
+            if result > 0:
+                messagebox.showinfo("status","guardado exitosamente")
+                self.trabajadores()
+                self.w1.destroy()
+            else: messagebox.showerror("Error",f"no se pudo guardar a {nombre}")
 
     def get_cargos(self):
         return self.ctrl.get_cargos()
