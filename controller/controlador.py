@@ -1,5 +1,5 @@
 from model.modelo import Modelo
-from datetime import datetime
+
 from util.passwords import encryptPassword
 
 
@@ -22,6 +22,11 @@ class Controlador:
                 return "las contraseñas no son iguales"
 
             contrasenna = encryptPassword(contrasenna)
+
+            for item in id_cargo:
+                if cargo.startswith(str(item)):
+                    cargo = item
+                    break
 
             return self.modelo.crear_usuario(cedula,nombre,apellido,contrasenna,cargo)
 
@@ -74,7 +79,11 @@ class Controlador:
 
 
     def get_cargos(self):
-        return self.modelo.get_cargo()
+        return self.modelo.get_cargos()
+
+    def get_cargo(self,id):
+        return self.modelo.get_cargo(id)
+
 
     def set_porcentajes(self,value,id_cargo):
         return self.modelo.set_porcentajes(value,id_cargo)
