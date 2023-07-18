@@ -62,7 +62,7 @@ class Modelo:
             ):
         con = self.__conexion()
         cur = con.cursor()
-        cur.execute(f"INSERT INTO empleados (cedula,nombre,apellido,cargo_empleado,contrasenna) VALUES ({cedula},'{nombre}','{apellido}',{cargo},'{contrasenna}')")
+        cur.execute(f"INSERT INTO empleados (cedula,nombre,apellido,contrasenna,cargo_empleado) VALUES ({cedula},'{nombre}','{apellido}','{contrasenna}',{cargo})")
         con.commit()
         result = cur.rowcount
         con.close()
@@ -134,7 +134,7 @@ class Modelo:
         return result
 
 
-    def get_cargo(self):
+    def get_cargos(self):
         con = self.__conexion()
         cur = con.cursor()
         cur.execute("SELECT * FROM cargos")
@@ -167,5 +167,14 @@ class Modelo:
         cur = con.cursor()
         cur.execute(f"SELECT * FROM empleados WHERE {param} LIKE '{search}%'")
         result = cur.fetchall()
+        con.close()
+        return result
+
+
+    def get_cargo(self,id):
+        con = self.__conexion()
+        cur = con.cursor()
+        cur.execute(f"SELECT * FROM cargos WHERE id_tipo = {id}")
+        result = cur.fetchone()
         con.close()
         return result
