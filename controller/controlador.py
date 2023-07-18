@@ -95,3 +95,18 @@ class Controlador:
         if param == "cedula":
             search = int(search)
         return self.modelo.busqueda(search,param)
+    
+    def set_sesion(self,cedula):
+        self.modelo.set_sesion(cedula)
+
+    def get_sesion(self):
+        result = self.modelo.get_sesion()
+        if result is None:
+            return []
+        return result
+    
+    def remove_sesion(self,cedula):
+        self.modelo.remove_sesion(cedula)
+
+    def get_bucetas(self):
+        return self.modelo.get_bucetas()
